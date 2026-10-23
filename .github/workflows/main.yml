@@ -29,7 +29,14 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force dist | Out-Null
-          Copy-Item "build/Release/$env:APP_NAME.exe" "dist/$env:APP_NAME.exe"
+          $exe = Get-ChildItem -Path build -Recurse -Filter "$env:APP_NAME.exe" | Select-Object -First 1
+          if (-not $exe) {
+            Write-Host "Не знайдено $env:APP_NAME.exe. Усі exe у build:"
+            Get-ChildItem -Path build -Recurse -Filter *.exe | ForEach-Object { Write-Host $_.FullName }
+            Write-Error "Перевір, що в репозиторії лежить новий CMakeLists.txt (target RustRV)"
+            exit 1
+          }
+          Copy-Item $exe.FullName "dist/$env:APP_NAME.exe"
           if (Test-Path font.ttf) { Copy-Item font.ttf dist/font.ttf }
           Copy-Item README.md dist/README.md
           Compress-Archive -Path dist/* -DestinationPath "$env:APP_NAME-$env:APP_VERSION-windows.zip"

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(RustClone CXX C)
+project(RustRV VERSION 0.2 LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -29,15 +29,15 @@ if(WIN32 AND EXISTS "${CMAKE_SOURCE_DIR}/icon.ico")
   list(APPEND SRC "${CMAKE_BINARY_DIR}/icon.rc")
 endif()
 
-add_executable(RustClone ${SRC})
-target_link_libraries(RustClone PRIVATE raylib)
+add_executable(RustRV ${SRC})
+target_link_libraries(RustRV PRIVATE raylib)
 
 if(WIN32)
   # без чорного вікна консолі
   if(MSVC)
-    set_target_properties(RustClone PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
-    target_compile_options(RustClone PRIVATE /utf-8)
+    set_target_properties(RustRV PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+    target_compile_options(RustRV PRIVATE /utf-8)
   else()
-    target_link_options(RustClone PRIVATE -mwindows -static -static-libgcc -static-libstdc++)
+    target_link_options(RustRV PRIVATE -mwindows -static -static-libgcc -static-libstdc++)
   endif()
 endif()
